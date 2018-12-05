@@ -1,4 +1,6 @@
 <?php 
+set_time_limit(0);
+
 /* SCRIPT SETTINGS */
 $host = 'localhost'; // DB HOST
 $dbname = 'testdb'; //DB NAME
@@ -13,7 +15,6 @@ if (count($argv)!=2) {
     die();
 }
 
-set_time_limit(0);
 
 //remove the files
 array_map('unlink', glob($temp_folder."*"));
@@ -21,11 +22,11 @@ array_map('unlink', glob($temp_folder."*"));
 $dsn = 'mysql:host='.$host;
 $pdo = new PDO($dsn, $user, $pass, array());
 
-//$file = 'https://ausdomainledger.net/au-domains-latest.csv.gz';
 $file = $argv[1];
 
 $outfile = $temp_folder.basename($file);
 
+//download the file
 file_put_contents($outfile, fopen($file, 'r') );
 
 if (file_exists($outfile)) {
@@ -56,7 +57,7 @@ $sql = 'INSERT INTO '.$dbname.'.'.$table_name.' (id, domain, first_seen, last_se
 ON DUPLICATE KEY UPDATE domain = VALUES(domain), first_seen = VALUES(first_seen), last_seen = VALUES(first_seen), etld = VALUES(etld), time_date_imported = VALUES(time_date_imported)';
 $add_domain = $pdo->prepare($sql);
 
-
+//filling the db
 $f = fopen($temp_folder.$files[2], 'r');
 fgetcsv($f); //skip the fist line
 $added_cnt = 0;
