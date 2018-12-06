@@ -4,14 +4,15 @@ set_time_limit(0);
 
 /* SCRIPT SETTINGS */
 $host = 'localhost'; // DB HOST
-$dbname = 'testdb'; //DB NAME
+$dbname = 'testdb2'; //DB NAME
 $table_name = 'domains'; //TABLE NAME
 $user = 'root'; // DB USER
-$pass = '1'; // DB PASSWORD
+$pass = ''; // DB PASSWORD
 
 $dsn = 'mysql:host='.$host;
 $pdo = new PDO($dsn, $user, $pass, array(PDO::MYSQL_ATTR_LOCAL_INFILE => true));
 
+$pdo->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING );
 
 if (count($argv)!=2) {
     echo('run: php fill_db.php /path/to/csv/file.csv'.PHP_EOL);
@@ -32,6 +33,9 @@ $sth->execute();
 $upload = "load data local infile '".$csv_file."'REPLACE into table ".$dbname.'.'.$table_name." fields terminated by ',' enclosed by '\"' lines terminated by '\n' IGNORE 1 LINES;";
 
 $sth = $pdo->prepare($upload);
+if (!$sth) {
+    print_r($pdo::errorInfo());
+}
 $sth->execute();
 echo PHP_EOL."Done!".PHP_EOL;
 ?>
