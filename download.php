@@ -1,9 +1,6 @@
 <?php
 set_time_limit(0);
 
-$temp_folder = '/home/roman/phpfile/temp/'; //EMPTY FOLDER FOR TEMP DATA (MUST BE WRITABLE)
-/* */
-
 if (count($argv)!=3) {
     echo('run: php download.php http://site.com/file.csv.gz /path/to/save/'.PHP_EOL);
     die();
